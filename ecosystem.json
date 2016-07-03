@@ -1,0 +1,14 @@
+{
+  "apps" : [
+    {
+      "name": "omzug_api",
+      "script": "./bin/api.js",
+      "instances"  : 0,
+      "env": {
+        "NODE_ENV": "production",
+        "APIPORT": 3030,
+        "NODE_PATH": "./api"
+      }
+    }
+  ]
+}
