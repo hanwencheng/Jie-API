@@ -43,6 +43,7 @@
     "mongoose": "^4.3.5",
     "mongoose-validator": "^1.2.4",
     "node-uuid": "^1.4.7",
+    "nodemon": "^1.9.2",
     "object-assign": "^4.0.1",
     "pretty-error": "^1.2.0",
     "query-string": "^3.0.0",
