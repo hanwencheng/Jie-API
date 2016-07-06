@@ -1,12 +1,12 @@
 {
   "apps" : [
     {
-      "name": "omzug_api",
-      "script": "./bin/api.js",
+      "name": "jie_api",
+      "script": "nodemon api/api.js --exec babel-node --presets es2015,stage-2",
       "instances"  : 0,
       "env": {
-        "NODE_ENV": "production",
-        "APIPORT": 3030,
+        "NODE_ENV": "development",
+        "APIPORT": 3031,
         "NODE_PATH": "./api"
       }
     }
