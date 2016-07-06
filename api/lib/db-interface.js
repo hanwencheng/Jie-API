@@ -14,11 +14,13 @@ const LOGTITLE = '[DB] ';
 var House = mongoModel.House
 var User = mongoModel.User
 var Post = mongoModel.Post
+var Token = mongoModel.Token
 const houseCollectionName = config.houseCollectionName;
 const userCollectionName = config.userCollectionName;
 const postCollectionName = config.postCollectionName;
-const TYPES = [userCollectionName, houseCollectionName, postCollectionName]
-const SCHEMAS = [User, House, Post]
+const tokenCollectionName = config.tokenCollectionName;
+const TYPES = [userCollectionName, houseCollectionName, postCollectionName, tokenCollectionName]
+const SCHEMAS = [User, House, Post, Token]
 
 import {logger} from './logger';
 
@@ -458,6 +460,28 @@ DI.update = function(type, query, update, resolve, reject){
       })
     }
   })
+}
+
+
+DI.getNear = function(location, range, resolve, reject){
+  const limit = config.locationCalculateLimit;
+  Token.find(
+    {
+      location: {
+        $near: {
+          $geometry : { type: "Point" , coordinates: location},
+          $maxDistance : range * 1000
+        }
+      }
+    }).limit(limit).exec(function(error, tokens) {
+    if (error) {
+      return reject({ msg: "error in calculating near location: " + error.toString() })
+    }
+    resolve({
+      status: true,
+      data : tokens
+    })
+  });
 }
 
 DI.getCityList = function(resolve, reject){

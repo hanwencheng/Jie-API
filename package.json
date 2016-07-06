@@ -42,6 +42,7 @@
     "map-props": "^1.0.0",
     "mongoose": "^4.3.5",
     "mongoose-validator": "^1.2.4",
+    "node-uuid": "^1.4.7",
     "object-assign": "^4.0.1",
     "pretty-error": "^1.2.0",
     "query-string": "^3.0.0",
@@ -54,6 +55,7 @@
     "superagent": "^1.4.0",
     "url-loader": "^0.5.7",
     "urlencode": "^1.1.0",
+    "uuid-validate": "0.0.2",
     "warning": "^2.1.0",
     "winston": "^2.1.1",
     "winston-daily-rotate-file": "^1.0.1"

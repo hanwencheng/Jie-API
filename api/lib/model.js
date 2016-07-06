@@ -10,10 +10,12 @@ var inited = false;
 const houseCollectionName = config.houseCollectionName;
 const userCollectionName = config.userCollectionName;
 const postCollectionName = config.postCollectionName;
+const tokenCollectionName = config.tokenCollectionName;
 
 var HouseSchema = require('./schemas/HouseSchema.js')(Schema, houseCollectionName);
 var UserSchema = require('./schemas/UserSchema.js')(Schema, userCollectionName);
 var PostSchema = require('./schemas/PostSchema.js')(Schema, postCollectionName);
+var TokenSchema = require('./schemas/TokenSchema')(Schema, tokenCollectionName);
 
 //Init database Models
 var initMongoDb = function(){
@@ -43,3 +45,4 @@ module.exports.initMongoDb = initMongoDb;
 module.exports.User = mongoose.model(userCollectionName, UserSchema)
 module.exports.House = mongoose.model(houseCollectionName, HouseSchema)
 module.exports.Post = mongoose.model(postCollectionName, PostSchema)
+module.exports.Token = mongoose.model(tokenCollectionName, TokenSchema)

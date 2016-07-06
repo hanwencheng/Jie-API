@@ -3,7 +3,7 @@ import session from 'express-session';
 import bodyParser from 'body-parser';
 import config from '../src/config';
 import * as actions from './actions/index';
-import {mapUrl} from './utils/url.js';
+import {mapUrl} from './utils/common.js';
 import PrettyError from 'pretty-error';
 import http from 'http';
 import SocketIo from 'socket.io';
@@ -36,15 +36,15 @@ app.use(session({
 app.use(bodyParser.json());
 
 //add sitemap
-app.get('/sitemap', function(req, res) {
-  sitemap.toXML( function (err, xml) {
-    if (err) {
-      return res.status(500).end();
-    }
-    res.header('Content-Type', 'application/xml');
-    res.send( xml );
-  });
-});
+//app.get('/sitemap', function(req, res) {
+//  sitemap.toXML( function (err, xml) {
+//    if (err) {
+//      return res.status(500).end();
+//    }
+//    res.header('Content-Type', 'application/xml');
+//    res.send( xml );
+//  });
+//});
 
 app.use((req, res) => {
   logger.info("get request :", req.url)
@@ -88,6 +88,8 @@ if (config.apiPort) {
   });
 
   io.on('connection', (socket) => {
+
+    console.log('a new customer connect to server')
     socket.emit('news', {msg: `'Hello World!' from server`});
 
     socket.on('history', () => {

@@ -15,7 +15,9 @@ module.exports = {
   userCollectionName : 'user',
   houseCollectionName : 'house',
   postCollectionName : 'post',
+  tokenCollectionName : 'token',
   sessionAge : 1 * 24 * 60 * 60 * 1000,
+  locationCalculateLimit : 20,
   pageSize : 9,
   awsFolder : "photos",
   awsPostFolder : "posts",
@@ -29,6 +31,7 @@ module.exports = {
   errors : {
     LackParameterError : 'LackParameterError : Request does not have enough parameter',
     WrongRequestError : 'WrongRequestError : Request parameter does not qualified',
+    WrongLocationError : "WrongLocationError : Request contained false location information",
     SchemaCannotFind : 'SchemaCannotFind: schema can not be find, please check again:',
     DataBaseFailed : 'DataBaseFailed: database meet error:',
     AuthFailed : 'Authentication Error:',

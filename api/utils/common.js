@@ -23,3 +23,7 @@ export function mapUrl(availableActions = {}, url = []) {
 
   return (typeof actionAndParams.action === 'function') ? actionAndParams : notFound;
 }
+
+export function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}

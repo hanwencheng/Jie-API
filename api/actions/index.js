@@ -20,3 +20,10 @@ export listPosts from './post/listPosts';
 export post from './post/post';
 export deletePost from './post/deletePost';
 export submitPost from './post/submitPost';
+
+//===== get =====
+export createToken from './token/create';
+
+//===== post =====
+export saveLocation from './token/saveLocation';
+export calculateLocation from './token/calculateLocation';
