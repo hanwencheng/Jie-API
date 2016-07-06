@@ -16,12 +16,15 @@ import {isNumeric} from '../../utils/common.js';
 export default function saveLocation(req, params) {
 
 
-  logger.debug('get request in createToken.js with params: ', params)
+  logger.debug('get request in saveLocation.js with params: ', params)
 
   const LackParameterError = config.errors.LackParameterError
   const WrongRequestError = config.errors.WrongRequestError
   const WrongLocationError = config.errors.WrongLocationError
-  var location = req.body
+  var location = {
+    latitude : (req.query.latitude / Math.pow(10, 6 )).toFixed(6),
+    longitude : (req.query.longitude / Math.pow(10, 6 )).toFixed(6),
+  }
 
   /**
    * req.body
@@ -60,7 +63,7 @@ export default function saveLocation(req, params) {
       if(location.latitude >90 || location.latitude < -90)
         return callback(WrongLocationError + "-> latitude")
 
-      if(location.longitude >90 || location.longitude < -90)
+      if(location.longitude > 180 || location.longitude < -180)
         return callback(WrongLocationError + "-> longitude")
 
       return callback(null)
@@ -90,7 +93,7 @@ export default function saveLocation(req, params) {
 
     async.waterfall(steps, function(err, result){
       if(err){
-        logger.error("err in createToken is", err)
+        logger.error("err in saveLocation is", err)
         if(err.msg) {
           reject(err.msg)
         }else if(typeof err == "string"){

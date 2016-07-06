@@ -11,6 +11,7 @@ import DB from './lib/db-interface.js';
 import sitemap from './lib/sitemap.js';
 const MongoStore = require('connect-mongo')(session);
 import {logger} from './lib/logger';
+var cors = require('cors');
 
 
 var mongoModel = require('./lib/model.js')
@@ -35,6 +36,8 @@ app.use(session({
 }));
 app.use(bodyParser.json());
 
+//TODO to be removed later
+app.use(cors());
 //add sitemap
 //app.get('/sitemap', function(req, res) {
 //  sitemap.toXML( function (err, xml) {
@@ -48,6 +51,7 @@ app.use(bodyParser.json());
 
 app.use((req, res) => {
   logger.info("get request :", req.url)
+
   const splittedUrlPath = req.url.split('?')[0].split('/').slice(1);
 
   const {action, params} = mapUrl(actions, splittedUrlPath);

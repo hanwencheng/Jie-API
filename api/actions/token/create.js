@@ -13,7 +13,6 @@ export default function create(req, params) {
 
   logger.debug('get request in createToken.js with params: ', params)
 
-  const LackParameterError = config.errors.LackParameterError
   const WrongRequestError = config.errors.WrongRequestError
 
   /**

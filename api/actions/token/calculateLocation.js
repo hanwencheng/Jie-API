@@ -17,12 +17,15 @@ export default function calculateLocation(req, params) {
 
 
   logger.debug('get request in calculateLocation.js with params: ', params ,
-    "\n body : " , req.body)
+    "\n body : " , req.query)
 
   const LackParameterError = config.errors.LackParameterError
   const WrongRequestError = config.errors.WrongRequestError
   const WrongLocationError = config.errors.WrongLocationError
-  var location = req.body
+  var location = {
+    latitude : (req.query.latitude / Math.pow(10, 6 )).toFixed(6),
+    longitude : (req.query.longitude / Math.pow(10, 6 )).toFixed(6),
+  }
 
   /**
    * req.body
@@ -84,6 +87,9 @@ export default function calculateLocation(req, params) {
       var center = [location.longitude, location.latitude]
       DB.getNear(center, 1.8, function(result){
         logger.trace('successful update location in database: ', result.data)
+        result.data.filter(function(obj){
+          return obj.uuid !== params[0]
+        })
         callback(null, result.data)
       },function(err){
         callback(err)
