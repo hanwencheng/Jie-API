@@ -113,9 +113,6 @@ export default function calculateLocation(req, params, io) {
           distance  : Math.round(item.dis)
         })
       })
-      io.emit("findUser" + params[0], {
-        number : targetList.length
-      });
 
       io.emit("askHelp", {
         target : targetList,
