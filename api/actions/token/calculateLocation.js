@@ -122,7 +122,7 @@ export default function calculateLocation(req, params, io) {
         need : location.need,
         asker : params[0],
       })
-      callback(null)
+      callback(null, filtered)
     }
 
     async.waterfall(steps, function(err, result){
