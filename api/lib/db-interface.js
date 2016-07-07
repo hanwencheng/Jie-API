@@ -529,5 +529,5 @@ function findSchema(type, callback){
 }
 
 function logSuccess(type, result){
-    logger.debug(LOGTITLE + 'information ' + type + ' successfully processed :' + result)
+    logger.debug(LOGTITLE + 'information ' + type + ' successfully processed :')
 }
