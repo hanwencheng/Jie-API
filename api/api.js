@@ -25,7 +25,6 @@ const app = express();
 const server = new http.Server(app);
 
 const io = new SocketIo(server);
-io.path('/ws');
 
 app.use(session({
   secret: 'hanwen is cool!!!!',
@@ -36,18 +35,8 @@ app.use(session({
 }));
 app.use(bodyParser.json());
 
-//TODO to be removed later
-app.use(cors());
-//add sitemap
-//app.get('/sitemap', function(req, res) {
-//  sitemap.toXML( function (err, xml) {
-//    if (err) {
-//      return res.status(500).end();
-//    }
-//    res.header('Content-Type', 'application/xml');
-//    res.send( xml );
-//  });
-//});
+var corsOptions = { credentials : false}
+app.use(cors(corsOptions));
 
 app.use((req, res) => {
   logger.info("get request :", req.url)
@@ -57,7 +46,7 @@ app.use((req, res) => {
   const {action, params} = mapUrl(actions, splittedUrlPath);
 
   if (action) {
-    action(req, params)
+    action(req, params, io)
       .then((result) => {
         if (result instanceof Function) {
           result(res);
@@ -90,28 +79,20 @@ if (config.apiPort) {
     logger.info('----\n==> 🌎  API is running on port %s', config.apiPort);
     logger.info('==> 💻  Send requests to http://%s:%s', config.apiHost, config.apiPort);
   });
-
+  app.set('socketio', io);
+  app.set('server', runnable);
   io.on('connection', (socket) => {
 
     console.log('a new customer connect to server')
-    socket.emit('news', {msg: `'Hello World!' from server`});
+    socket.emit('greet', {msg: `'Hello World!' from server`});
 
-    socket.on('history', () => {
-      for (let index = 0; index < bufferSize; index++) {
-        const msgNo = (messageIndex + index) % bufferSize;
-        const msg = messageBuffer[msgNo];
-        if (msg) {
-          socket.emit('msg', msg);
-        }
-      }
-    });
+    socket.on('sendHelp', function(ev,data){
+      socket.emit("sendHelpAsker" + data.asker, data)
+    })
 
-    socket.on('msg', (data) => {
-      data.id = messageIndex;
-      messageBuffer[messageIndex % bufferSize] = data;
-      messageIndex++;
-      io.emit('msg', data);
-    });
+    socket.on('sendUpdate', function(ev,data){
+      socket.emit('updateHelper' + data.helper, data)
+    })
   });
   io.listen(runnable);
 } else {

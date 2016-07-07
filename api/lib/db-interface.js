@@ -22,6 +22,7 @@ const tokenCollectionName = config.tokenCollectionName;
 const TYPES = [userCollectionName, houseCollectionName, postCollectionName, tokenCollectionName]
 const SCHEMAS = [User, House, Post, Token]
 
+
 import {logger} from './logger';
 
 module.exports = new DatabaseInterface();
@@ -49,7 +50,7 @@ DI.init = function () {
     logger.info('[DB] Warning: Re-initializing');
   }
   //create the database collection if not existed.
-  var collection1 = this.db.collection(houseCollectionName);
+  var collection1 = this.db.collection(tokenCollectionName);
   var collection2 = this.db.collection(userCollectionName);
   logger.info('[DB] Initialized:');
   //add transaction batch
@@ -60,7 +61,6 @@ DI.init = function () {
   //setInterval(self.intervalSaveTxs, batchInsertInterval);
 
   this.initialized = true;
-  insert();
 };
 
 function insert(){
@@ -462,26 +462,43 @@ DI.update = function(type, query, update, resolve, reject){
   })
 }
 
+/**
+ * example output
+ * result :
+ * [ {  dis: 24.753438747563656,
+        obj:
+        { '[object Object]': Thu Jul 07 2016 13:46:03 GMT+0200 (CEST),
+          createdAt: Thu Jul 07 2016 13:45:25 GMT+0200 (CEST),
+          uuid: '4b583c70-4438-11e6-a2bb-c531662e2b80',
+          __v: 0,
+          location: [Object],
+          _id: 577e40d57d92165915cc966d } } ]
+ * stats
+ *   {  nscanned: 1,
+        objectsLoaded: 1,
+        avgDistance: 24.753438747563656,
+        maxDistance: 24.753438747563656,
+        time: 0 }
+ */
 
 DI.getNear = function(location, range, resolve, reject){
+
   const limit = config.locationCalculateLimit;
-  Token.find(
+  console.log("location is", location)
+  Token.geoNear(
+    {type: 'Point', coordinates: location},
     {
-      location: {
-        $near: {
-          $geometry : { type: "Point" , coordinates: location},
-          $maxDistance : range * 1000
-        }
+      maxDistance : range * 1000,
+      spherical: true,
+    }, function(error, result, stats) {
+      if (error) {
+        return reject({ msg: "error in calculating near location: " + error.toString() })
       }
-    }).limit(limit).exec(function(error, tokens) {
-    if (error) {
-      return reject({ msg: "error in calculating near location: " + error.toString() })
-    }
-    resolve({
-      status: true,
-      data : tokens
-    })
-  });
+      resolve({
+        status: true,
+        data : result
+      })
+    });
 }
 
 DI.getCityList = function(resolve, reject){

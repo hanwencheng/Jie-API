@@ -9,11 +9,12 @@ import uuidCheck from 'uuid-validate'
 var config = require('../../lib/config');
 const async = require('async')
 import {isNumeric} from '../../utils/common.js';
+import request from 'request'
 
 /**
  * sample request : /saveLocation/4af655a0-4230-11e6-ac77-79556581963e/
  */
-export default function calculateLocation(req, params) {
+export default function calculateLocation(req, params, io) {
 
 
   logger.debug('get request in calculateLocation.js with params: ', params ,
@@ -23,8 +24,9 @@ export default function calculateLocation(req, params) {
   const WrongRequestError = config.errors.WrongRequestError
   const WrongLocationError = config.errors.WrongLocationError
   var location = {
-    latitude : (req.query.latitude / Math.pow(10, 6 )).toFixed(6),
-    longitude : (req.query.longitude / Math.pow(10, 6 )).toFixed(6),
+    latitude : parseFloat(decodeURI(req.query.latitude)),
+    longitude : parseFloat(decodeURI(req.query.longitude)),
+    need : decodeURI(req.query.need),
   }
 
   /**
@@ -41,6 +43,7 @@ export default function calculateLocation(req, params) {
       checkLocation,
       checkToken,
       calculate,
+      sendNotification
     ]
 
     function validateParams(callback){
@@ -62,10 +65,10 @@ export default function calculateLocation(req, params) {
         return callback(WrongLocationError + "-> not number")
 
       if(location.latitude >90 || location.latitude < -90)
-        return callback(WrongLocationError + "-> latitude")
+        return callback(WrongLocationError + "-> latitude : " + location.latitude)
 
-      if(location.longitude >90 || location.longitude < -90)
-        return callback(WrongLocationError + "-> longitude")
+      if(location.longitude >180 || location.longitude < -180)
+        return callback(WrongLocationError + "-> longitude : " + location.longitude)
 
       if(location.range <= 0)
         return callback(WrongLocationError + "-> range")
@@ -85,14 +88,39 @@ export default function calculateLocation(req, params) {
 
     function calculate(callback){
       var center = [location.longitude, location.latitude]
+      console.log("now start calculate in db")
       DB.getNear(center, 1.8, function(result){
-        logger.trace('successful update location in database: ', result.data)
-        result.data.filter(function(obj){
-          return obj.uuid !== params[0]
+        var filtered = []
+        result.data.forEach(function(item){
+          if(item.obj.uuid !== params[0]) {
+            filtered.push(item)
+          }
         })
-        callback(null, result.data)
+        callback(null, filtered)
       },function(err){
         callback(err)
+      })
+    }
+
+    function sendNotification(filtered, callback){
+      //if(filtered.length == 0)
+      //  return callback(null, filtered)
+
+      var targetList = []
+      filtered.forEach(function(item){
+        targetList.push({
+          token : item.obj.uuid,
+          distance  : Math.round(item.dis)
+        })
+      })
+      io.emit("findUser" + params[0], {
+        number : targetList.length
+      });
+
+      io.emit("askHelp", {
+        target : targetList,
+        need : location.need,
+        asker : params[0],
       })
     }
 

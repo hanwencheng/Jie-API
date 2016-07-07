@@ -8,7 +8,7 @@ if(process.env.NODE_ENV === "production"){
 
 module.exports = {
   host : 'localhost:27017',
-  databaseName: 'omzug',
+  databaseName: 'jie-api',
   dbUser : 'omzug',
   dbPassword : '010702hanwen',
   //please list the collection names one by one
@@ -18,6 +18,7 @@ module.exports = {
   tokenCollectionName : 'token',
   sessionAge : 1 * 24 * 60 * 60 * 1000,
   locationCalculateLimit : 20,
+  appId : "5c900d994e5c0571fcd479789db51af205a73ea4e58ad510",
   pageSize : 9,
   awsFolder : "photos",
   awsPostFolder : "posts",

@@ -48,6 +48,7 @@
     "object-assign": "^4.0.1",
     "pretty-error": "^1.2.0",
     "query-string": "^3.0.0",
+    "request": "^2.72.0",
     "scroll-behavior": "^0.3.0",
     "serialize-javascript": "^1.1.2",
     "serve-favicon": "^2.3.0",

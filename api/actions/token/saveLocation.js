@@ -22,8 +22,8 @@ export default function saveLocation(req, params) {
   const WrongRequestError = config.errors.WrongRequestError
   const WrongLocationError = config.errors.WrongLocationError
   var location = {
-    latitude : (req.query.latitude / Math.pow(10, 6 )).toFixed(6),
-    longitude : (req.query.longitude / Math.pow(10, 6 )).toFixed(6),
+    latitude : parseFloat(decodeURI(req.query.latitude)),
+    longitude : parseFloat(decodeURI(req.query.longitude)),
   }
 
   /**
