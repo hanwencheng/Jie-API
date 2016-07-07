@@ -9,8 +9,8 @@ if(process.env.NODE_ENV === "production"){
 module.exports = {
   host : 'localhost:27017',
   databaseName: 'jie-api',
-  dbUser : 'omzug',
-  dbPassword : '010702hanwen',
+  dbUser : 'xinyue',
+  dbPassword : '010702heihei',
   //please list the collection names one by one
   userCollectionName : 'user',
   houseCollectionName : 'house',
