@@ -26,13 +26,6 @@ const server = new http.Server(app);
 
 const io = new SocketIo(server);
 
-app.use(session({
-  secret: 'hanwen is cool!!!!',
-  store : new MongoStore({ mongooseConnection: mongoConnection }),
-  resave: false,
-  saveUninitialized: false,
-  cookie: { maxAge: config.sessionAge }
-}));
 app.use(bodyParser.json());
 
 var corsOptions = { credentials : false}
