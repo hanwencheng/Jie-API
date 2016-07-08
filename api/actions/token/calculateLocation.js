@@ -27,6 +27,7 @@ export default function calculateLocation(req, params, io) {
     latitude : parseFloat(decodeURI(req.query.latitude)),
     longitude : parseFloat(decodeURI(req.query.longitude)),
     need : decodeURI(req.query.need),
+    range : decodeURI(req.query.range) //todo to be used later
   }
 
   /**
@@ -88,7 +89,7 @@ export default function calculateLocation(req, params, io) {
 
     function calculate(callback){
       var center = [location.longitude, location.latitude]
-      console.log("now start calculate in db")
+      console.log("now start calculate in db" , center)
       DB.getNear(center, 1.8, function(result){
         var filtered = []
         result.data.forEach(function(item){
@@ -114,6 +115,7 @@ export default function calculateLocation(req, params, io) {
         })
       })
 
+      console.log('send target list is', targetList)
       io.emit("askHelp", {
         target : targetList,
         need : location.need,
