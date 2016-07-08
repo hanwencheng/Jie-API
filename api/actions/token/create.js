@@ -26,6 +26,7 @@ export default function create(req, params) {
 
     const steps = [
       validateParams,
+      checkToken,
       saveToken,
     ]
 
@@ -36,15 +37,36 @@ export default function create(req, params) {
         if(!uuidCheck(params[0])){
           return callback(null, false)
         }else
-          checkToken(params[0], callback)
+          callback(null, params[0])
       }else{
         callback(WrongRequestError)
       }
     }
 
-    function saveToken(validToken,callback){
-      if(validToken){
-        callback(null, validToken.data)
+
+    function checkToken(token, callback){
+      //if no token in request
+      if(!token)
+        return callback(null, false)
+
+      DB.get('token', {uuid : token}, function(result){
+        //token found
+        callback(null, result)
+      }, function(err){
+        //token not found
+        if(err.type == 1){
+          logger.debug("token not found, is expired, create new")
+          callback(null, false)
+        }else{
+          console.log("error happened in internal create token")
+          callback(err)
+        }
+      })
+    }
+
+    function saveToken(inDatabase,callback){
+      if(inDatabase){
+        callback(null, inDatabase.data)
       }else{
         var newToken = uuid.v1();
         DB.save('token', {uuid : newToken}, function(result){
@@ -54,21 +76,6 @@ export default function create(req, params) {
           callback(err)
         })
       }
-    }
-
-    function checkToken(token, callback){
-      DB.get('token', {uuid : token}, function(result){
-        //token found
-        callback(null, result)
-      }, function(err){
-        //token not found
-        if(err.type !== 0){
-          logger.debug("token not found, is expired, create new")
-          callback(null, false)
-        }else{
-          callback(err)
-        }
-      })
     }
 
     async.waterfall(steps, function(err, result){
