@@ -77,14 +77,16 @@ if (config.apiPort) {
   io.on('connection', (socket) => {
 
     console.log('a new customer connect to server')
-    socket.emit('greet', {msg: `'Hello World!' from server`});
+    io.emit('greet', {msg: `'Hello World!' from server`});
 
-    socket.on('sendHelp', function(ev,data){
-      socket.emit("sendHelpAsker" + data.asker, data)
+    socket.on('sendHelp', function(data){
+      logger.debug('sendHelp data is' , data)
+      io.emit("sendHelpAsker" + data.asker, data)
     })
 
-    socket.on('sendUpdate', function(ev,data){
-      socket.emit('updateHelper' + data.helper, data)
+    socket.on('sendUpdate', function(data){
+      logger.debug('sendUpdate data is' , data)
+      io.emit('updateHelper' + data.helper, data)
     })
   });
   io.listen(runnable);
