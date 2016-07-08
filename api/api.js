@@ -81,12 +81,12 @@ if (config.apiPort) {
 
     socket.on('sendHelp', function(data){
       logger.debug('sendHelp data is' , data)
-      io.emit("sendHelpAsker" + data.asker, data)
+      socket.emit("sendHelpAsker" + data.asker, data)
     })
 
     socket.on('sendUpdate', function(data){
       logger.debug('sendUpdate data is' , data)
-      io.emit('updateHelper' + data.helper, data)
+      socket.emit('updateHelper' + data.helper, data)
     })
   });
   io.listen(runnable);
