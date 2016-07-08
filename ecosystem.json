@@ -2,7 +2,7 @@
   "apps" : [
     {
       "name": "jie_api",
-      "script": "nodemon api/api.js --exec babel-node --presets es2015,stage-2",
+      "script": "dist/api.js",
       "instances"  : 0,
       "env": {
         "NODE_ENV": "development",
